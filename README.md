@@ -3,7 +3,7 @@ AudioReviser
 
 An android app for revising material you've read. You take audio notes as you read, and every day you listen to previous notes you've taken. In keeping with the best advice for revision, the app plays first the notes from yesterday, then those from a week ago, and then those from a month ago. While listenening to your own voice you hear relaxing music in the background.
 
-A demonstration of the first version of the app I did is (here)[http://www.youtube.com/watch?v=6vWXp_yq9yA]
+A demonstration of the first version of the app I did is [here](http://www.youtube.com/watch?v=6vWXp_yq9yA)
 
 About the code
 --------------
