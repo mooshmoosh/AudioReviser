@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AudioReviser</string>
+    <string name="action_settings">Settings</string>
+    <string name="play_button_text">Play</string>
+    <string name="switch_fragment_button_text">Add Notes</string>
+    <string name="default_notes_list_text">Notes list goes here</string>
+    <string name="title_activity_create_more_notes">Record new notes</string>
+    <string name="instruction_text_record_more_notes">Press Record to begin recording another note</string>
+    <string name="instruction_text_press_stop">Press Stop when you\'re done</string>
+    <string name="record_more_notes_button_text1">Record</string>
+    <string name="record_more_notes_button_text2">Stop</string>
+    <string name="record_more_notes_button_text3">Wait#8230;</string>
+    <string name="chunk_time_remaining_label">Time left in the current chunk:</string>
+    <string name="MainActivity_pause_button_pause_text">Pause</string>
+    <string name="MainActivity_pause_button_resume_text">Resume</string>
+    <string name="MainActivity_next_button_text">Next</string>
+    <string name="CreateMoreNotes_next_file_name_label_text">Next filename:</string>
+    <string name="CreateMoreNotes_current_chunk_label_text">Current chunk:</string>
+
+</resources>
