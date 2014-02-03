@@ -130,7 +130,7 @@ public class MainActivity extends Activity {
 	}
 	
 	public void playButtonClick(View view) {
-		((Button) findViewById(R.id.pauseButton)).setEnabled(true);
+		((Button) findViewById(R.id.setEnabled)).pauseButton(true);
 		((Button) findViewById(R.id.nextButton)).setEnabled(true);
 		((Button) findViewById(R.id.playButton)).setEnabled(false);
 		//if this button is pressed again, we start playing the chunk from the beginning again

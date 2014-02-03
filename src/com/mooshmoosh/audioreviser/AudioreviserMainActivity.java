@@ -29,9 +29,8 @@ public class AudioreviserMainActivity extends Activity {
 		
 		recordMoreNotesFragment = new RecordMoreNotesFragment();
 		listenToNotesFragment = new ListenToNotesFragment();
-		
-		businessLogicUnit = new AudioReviserBusinessLogic(new AndroidAudioManagerMock());
-		businessLogicUnit.init();
+		String StorageDirectoryPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/AudioReviser" 
+		businessLogicUnit = new AudioReviserBusinessLogic(new AndroidAudioManagerMock(), StorageDirectoryPath);
 		
 		fm = getFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
@@ -108,9 +107,7 @@ public class AudioreviserMainActivity extends Activity {
 			if(businessLogicUnit.textViewIsChanged[i]) {
 				if(businessLogicUnit.newText[i]!=null) {
 					textViewWidgets[i].setText(businessLogicUnit.newText[i]);
-					businessLogicUnit.newText[i] = null;
 				}
-				businessLogicUnit.textViewIsChanged[i] = false;
 			}
 		}
 		for(int i=0;i<BUTTON_WIDGET_COUNT;i++) {
@@ -119,9 +116,9 @@ public class AudioreviserMainActivity extends Activity {
 				if(businessLogicUnit.newButtonText[i]!=null) {
 					textViewWidgets[i].setText(businessLogicUnit.newButtonText[i]);
 				}
-				businessLogicUnit.buttonIsChanged[i] = false;
 			}
 		}
+		businessLogicUnit.resetWidgetControls();
 	}
 
 	@Override
