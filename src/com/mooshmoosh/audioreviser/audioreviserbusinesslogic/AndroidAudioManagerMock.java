@@ -3,6 +3,10 @@ package com.mooshmoosh.audioreviser.audioreviserbusinesslogic;
 public class AndroidAudioManagerMock {
 
 	public String AppFolder;
+	public boolean isCurrentlyRecording;
+	public boolean isCurrentlyPlaying;
+	public boolean isCurrentlySavingAFile;
+	
 	
 	public AndroidAudioManagerMock() {
 		

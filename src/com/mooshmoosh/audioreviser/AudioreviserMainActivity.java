@@ -61,6 +61,7 @@ public class AudioreviserMainActivity extends Activity {
 		ft.replace(R.id.container, recordMoreNotesFragment);
 		ft.addToBackStack(null);
 		ft.commit();
+		businessLogicUnit.switchToAddNotesFragment();
 		updateUI();
 	}
 	

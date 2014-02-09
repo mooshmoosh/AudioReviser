@@ -2,7 +2,9 @@ package com.mooshmoosh.audioreviser.audioreviserbusinesslogic;
 import java.util.*;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 
 /*
  * AudioReviserDatabaseManager.java
@@ -15,10 +17,14 @@ import java.io.BufferedReader;
 public class AudioReviserDatabaseManager {
 	private Map<String, Integer> intValues;
 	private Map<String,String> stringValues;
+	private Map<String,AudioNoteDatabaseEntry> audioNotes;
+	private Map<String,AudioChunkDatabaseEntry> chunks;
 	
 	public AudioReviserDatabaseManager() {
 		intValues = new HashMap<String, Integer>();
 		stringValues = new HashMap<String,String>();
+		//audioNotes = new HashMap<String,AudioNoteDatabaseEntry>();
+		//chunks = new HashMap<String,AudioChunkDatabaseEntry>();
 	}
 	
 	public void loadDatabase(String filename) throws Exception{
@@ -70,7 +76,48 @@ public class AudioReviserDatabaseManager {
 		else throw new Exception("stringValues does not contain key:" + key);
 	}
 	
+	public boolean entryExists(String key) {
+		return stringValues.containsKey(key) || intValues.containsKey(key);
+	}
 	
+	public String toString() {
+		String result="";
+		for (Map.Entry<String, Integer> entry : intValues.entrySet()) {
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+			result+=key + ":" + value + "\n";
+		}
+		for (Map.Entry<String, String> entry : stringValues.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
+			result+=key + ":" + value + "\n";
+		}
+		return result;
+	}
+	
+	public void save(String filename) {
+		BufferedWriter writer = null;
+		try
+		{
+			writer = new BufferedWriter( new FileWriter( filename));
+			writer.write( this.toString());
+
+		}
+		catch ( java.io.IOException e)
+		{
+		}
+		finally
+		{
+			try
+			{
+				if ( writer != null)
+				writer.close( );
+			}
+			catch ( java.io.IOException e)
+			{
+			}
+		}
+	}
 	
 	
 	public int CurrentChunkToPlay;

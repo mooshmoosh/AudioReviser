@@ -1,6 +1,8 @@
 package com.mooshmoosh.audioreviser.audioreviserbusinesslogic;
 
 import java.io.File;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class AudioReviserBusinessLogic {
 	
@@ -33,16 +35,33 @@ public class AudioReviserBusinessLogic {
 	
 	public AndroidAudioManagerMock mAudioManager;
 	public String mWorkingDirectory;
-
-	public AudioReviserBusinessLogic(AndroidAudioManagerMock audioManager, String WorkingDirectory) throws Exception{
+	
+	public AudioReviserDatabaseManager dbase;
+	
+	public AudioReviserBusinessLogic(AndroidAudioManagerMock audioManager, String WorkingDirectory, String databaseFilename) throws Exception{
 		mAudioManager = audioManager;
-		if(!createAppDirectory(WorkingDirectory)) {
-			throw new Exception("Could Not Create Working Directory");
+		if(WorkingDirectory!=null) {
+			if(!createAppDirectory(WorkingDirectory)) {
+				throw new Exception("Could Not Create Working Directory");
+			}
+			mWorkingDirectory = WorkingDirectory + "/";
+		} else mWorkingDirectory = null;
+		dbase = new AudioReviserDatabaseManager();
+		try {
+			if(databaseFilename!=null)
+				dbase.loadDatabase(databaseFilename);
 		}
-		mWorkingDirectory = WorkingDirectory + "/";
-		resetWidgetControls();
-		
-		initialiseWidgets();
+		catch(java.io.FileNotFoundException e) {
+			dbase.set("CurrentChunkToPlay",0);
+			dbase.set("RevisionLevel",0);
+		}
+		catch(Exception e) {
+			System.out.println("Other Exception:" + e);
+		}
+		if(databaseFilename!=null) {
+			resetWidgetControls();
+			initialiseWidgets();
+		}
 	}
 	
 	private boolean createAppDirectory(String directory) {
@@ -74,10 +93,33 @@ public class AudioReviserBusinessLogic {
 		}
 	}
 	
-	private void initialiseWidgets() {
+	private void initialiseWidgets() throws Exception{
 		disableButton(pause_button);
 		disableButton(next_button);
-		setTextViewText(notes_list,"Today's Chunk to play is: ");
+		
+		if(!dbase.entryExists("FirstInChunk"+dbase.valueOf("CurrentChunkToPlay"))) {
+			//if FirstInChunk(CurrentChunkToPlay) is undefined then there are no notes in the chunk
+			disableButton(play_button);
+			setTextViewText(notes_list,"Nothing to play");
+		}
+		else if(!dbase.entryExists("ChunkRunningTime"+dbase.valueOf("CurrentChunkToPlay"))) {
+			//if ChunkRunningTime(CurrentChunkToPlay) is undefined then the current chunk is incomplete
+			disableButton(play_button);
+			setTextViewText(notes_list,"The current chunk is incomplete");
+		}
+		else if(dbase.valueOf("CurrentChunkToPlay")<7) {
+			enableButton(play_button);
+			setTextViewText(notes_list, "Today's chunk to play is: " + dbase.valueOf("CurrentChunkToPlay"));
+		}
+		else if(dbase.valueOf("CurrentChunkToPlay")<30) {
+			enableButton(play_button);
+			setTextViewText(notes_list, "Today's chunks to play are: " + dbase.valueOf("CurrentChunkToPlay") + ", " +  (dbase.valueOf("CurrentChunkToPlay") - 7));
+		}
+		else {
+			enableButton(play_button);
+			setTextViewText(notes_list, "Today's chunks to play are: " + dbase.valueOf("CurrentChunkToPlay") + ", " +  (dbase.valueOf("CurrentChunkToPlay") - 7) + ", " +  (dbase.valueOf("CurrentChunkToPlay") - 30));
+		}
+		
 	}
 
 	public void nextButtonClick() {
@@ -104,6 +146,10 @@ public class AudioReviserBusinessLogic {
 		
 	}
 	
+	public void switchToAddNotesFragment() {
+		
+	}
+	
 	private void setTextViewText(int textView, String newValue) {
 		if(0<=textView&& textView <TEXTVIEW_WIDGET_COUNT) {
 			newText[textView] = newValue;
@@ -125,5 +171,10 @@ public class AudioReviserBusinessLogic {
 			isEnabled[button] = false;
 			newButtonText[button] = null;
 		}
+	}
+	
+	public String currentDateFormatted() {
+		Calendar CurrentDate = Calendar.getInstance();
+		return String.format(Locale.getDefault(),"%04d-%02d-%02d-%02d-%02d-%02d",CurrentDate.get(Calendar.YEAR),CurrentDate.get(Calendar.MONTH),CurrentDate.get(Calendar.DAY_OF_MONTH),CurrentDate.get(Calendar.HOUR_OF_DAY),CurrentDate.get(Calendar.MINUTE),CurrentDate.get(Calendar.SECOND));
 	}
 }
